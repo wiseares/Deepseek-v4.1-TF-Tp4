@@ -1,0 +1,166 @@
+{
+ "slot": "gate-v036-20261102T2005Z",
+ "gate": "PASS (45 checks, 0 failed)",
+ "rowcmp": "LEVEL-OR-BETTER: 16 rows, none more than 1.0 % below",
+ "rows": {
+  "cdecode code C1": {
+   "v035": 113.7,
+   "v036": 114.4,
+   "change_pct": 0.6,
+   "unit": "tok/s"
+  },
+  "cdecode code C8": {
+   "v035": 230.1,
+   "v036": 233.6,
+   "change_pct": 1.5,
+   "unit": "tok/s"
+  },
+  "cdecode code C16": {
+   "v035": 274.1,
+   "v036": 274.9,
+   "change_pct": 0.3,
+   "unit": "tok/s"
+  },
+  "cdecode prose C1": {
+   "v035": 73.0,
+   "v036": 73.1,
+   "change_pct": 0.1,
+   "unit": "tok/s"
+  },
+  "cdecode prose C8": {
+   "v035": 199.0,
+   "v036": 201.1,
+   "change_pct": 1.0,
+   "unit": "tok/s"
+  },
+  "cdecode prose C16": {
+   "v035": 245.9,
+   "v036": 256.6,
+   "change_pct": 4.4,
+   "unit": "tok/s"
+  },
+  "prefill 93K": {
+   "v035": 2925.8,
+   "v036": 2971.8,
+   "change_pct": 1.6,
+   "unit": "tok/s"
+  },
+  "TTFT behind": {
+   "v035": 0.58,
+   "v036": 0.56,
+   "change_pct": -4.3,
+   "unit": "s"
+  },
+  "needle 300K": {
+   "v035": 95.8,
+   "v036": 95.1,
+   "change_pct": -0.8,
+   "unit": "s"
+  },
+  "set b code": {
+   "v035": 135.8,
+   "v036": 135.4,
+   "change_pct": -0.3,
+   "unit": "tok/s"
+  },
+  "set b prose": {
+   "v035": 78.5,
+   "v036": 78.3,
+   "change_pct": -0.3,
+   "unit": "tok/s"
+  },
+  "set b structured": {
+   "v035": 186.1,
+   "v036": 185.1,
+   "change_pct": -0.5,
+   "unit": "tok/s"
+  },
+  "prefill 8K": {
+   "v035": 3033.7,
+   "v036": 3083.0,
+   "change_pct": 1.6,
+   "unit": "tok/s"
+  },
+  "prefill 32K": {
+   "v035": 3256.0,
+   "v036": 3288.9,
+   "change_pct": 1.0,
+   "unit": "tok/s"
+  },
+  "prefill 128K": {
+   "v035": 3274.9,
+   "v036": 3315.3,
+   "change_pct": 1.2,
+   "unit": "tok/s"
+  },
+  "set a code": {
+   "v035": 107.7,
+   "v036": 107.2,
+   "change_pct": -0.5,
+   "unit": "tok/s"
+  },
+  "set a prose": {
+   "v035": 71.5,
+   "v036": 71.4,
+   "change_pct": -0.2,
+   "unit": "tok/s"
+  },
+  "set a structured": {
+   "v035": 138.3,
+   "v036": 138.3,
+   "change_pct": -0.0,
+   "unit": "tok/s"
+  },
+  "c2": {
+   "v035": 100.6,
+   "v036": 99.8,
+   "change_pct": -0.8,
+   "unit": "tok/s"
+  },
+  "c4": {
+   "v035": 140.1,
+   "v036": 139.8,
+   "change_pct": -0.2,
+   "unit": "tok/s"
+  },
+  "8 streams": {
+   "v035": 217.1,
+   "v036": 220.9,
+   "change_pct": 1.8,
+   "unit": "tok/s"
+  },
+  "16 streams": {
+   "v035": 258.5,
+   "v036": 258.3,
+   "change_pct": -0.1,
+   "unit": "tok/s"
+  },
+  "set c copy-code": {
+   "v035": 152.0,
+   "v036": 152.3,
+   "change_pct": 0.2,
+   "unit": "tok/s"
+  },
+  "set c copy-json": {
+   "v035": 153.3,
+   "v036": 153.3,
+   "change_pct": 0.0,
+   "unit": "tok/s"
+  },
+  "set c quote": {
+   "v035": 163.4,
+   "v036": 163.0,
+   "change_pct": -0.3,
+   "unit": "tok/s"
+  }
+ },
+ "needle_1m_b": {
+  "seconds": [
+   355.81
+  ],
+  "found": "3 of 3"
+ },
+ "release": "READY",
+ "worse": [],
+ "accepted": []
+}

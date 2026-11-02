@@ -18,9 +18,10 @@ TensorFold
   (https://github.com/bertholomus/TensorFold), which keeps TensorFold's LICENSE and upstream license texts, lists the
   upstream files it changes in its NOTICE and every outside source in its ATTRIBUTION.md.
   The branch carries pull requests to our fork by Lucas Peters (#4), lepetitprince716-prog (#18), Manrique (#26,
-  and #28 and #29 ported from the two-node branch), Scott Woolsey Biggart (#30), mrsergiopascal (#31) and
-  Blackwellboy (#33 and #34). ATTRIBUTION.md credits each of them.
-  #38 is new in v0.3.2: the branch cherry-picked it, and its commit keeps Blackwellboy as its author.
+  and #28 and #29 ported from the two-node branch), Scott Woolsey Biggart (#30), mrsergiopascal (#31),
+  Blackwellboy (#33, #34 and #38) and LeetJoe (#17), and carries upstream TensorFold's template fix by Nathan
+  McBride and tonyd2wild's two patches (MIT), each under its author's name. ATTRIBUTION.md credits each of
+  them. #38 came new in v0.3.2: the branch cherry-picked it, and its commit keeps Blackwellboy as its author.
   kit/cubins/ holds TensorFold's EXL3 kernels, compiled, with our additions; their code written before TensorFold
   0.6.0 keeps its MIT notice, kit/LICENSES/TensorFold-MIT.txt (TensorFold's LICENSES/MIT.txt, unmodified).
 

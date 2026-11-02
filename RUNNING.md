@@ -1,16 +1,17 @@
 # Running it
 
 What follows is how we run the served build. `scripts/serve.sh` is our served launch with the site values moved to
-`config.env`; nothing else in it changed but its `inputs` command, which the launch never runs. v0.3.5 changes the
+`config.env`; nothing else in it changed but its `inputs` command, which the launch never runs. v0.3.6 changes the
 served settings (section 3); the kit is v0.3.0's, and the weights and how they are readied are v0.2.0's.
 
 ## 1. The engine
 
 Clone our TensorFold fork at the commit in `ENGINE_COMMIT` (branch `deepseek-v41-zig-tp4`). That commit is the
-served engine's source (`ebf6ae33`: v0.3.3's `39155041` and the one waves commit v0.3.5 adds) carried on
-the branch's public line as `0a0b69a` (v0.3.3's `b116c47` and that commit; section 3). The public
+served engine's source (`7a2bc4c2`: v0.3.5's `ebf6ae33` plus the release's 16 commits — `TF_DS_TWO_HOP`,
+tonyd2wild's `TF_RDMA_GID` and `TF_SEED_RANDOM`/`TF_TOP_K_MAX` patches, the #17 escape, the tokenizer and server
+fixes and the rank-stop watch) carried on the branch's public line as `953bd6fd` (section 3). The public
 line adds two pull requests the served build did not carry: #30, the neighbor transport, which runs only with
-`TF_DS_NEIGHBOR_RDMA=1`, and #31, a CPU test of the replay cut. `ebf6ae33`, built as below, gives the
+`TF_DS_NEIGHBOR_RDMA=1`, and #31, a CPU test of the replay cut. `7a2bc4c2`, built as below, gives the
 served binaries but for nvcc's build ids. `ENGINE_COMMIT`'s binaries also hold #30's code, and their ranks exchange a
 48-byte settings frame at the start (40 before), so run the same build on all four nodes. Build the native engine for
 the GB10's aarch64 + sm_121 with Zig 0.17.0 and the CUDA toolchain of `nvcr.io/nvidia/pytorch:26.07-py3`:
@@ -119,11 +120,12 @@ them.
 `config.env.example` holds the served settings: `ENGINE_ENV` (every rank's environment), `FOLLOW_FLAGS` (ranks 1-3) and
 `RANK0_FLAGS` (rank 0's own flags after the site's `SERVER_FLAGS`). `TF_FILL_CHUNKS=1`, `TF_FILL_MANY=1`,
 `TF_DS_2D_YX=1`, `TF_DS_WAVES=1` and `NCCL_MAX_NCHANNELS=4` are set as served; leave `TENSORFOLD_REPLY_IDS`,
-`TF_DS_NEIGHBOR_RDMA`, `TF_DS_SOLO_OVERHEAD` and `TF_DS_NO_COPIES` unset to serve as we do; the README says what
+`TF_DS_NEIGHBOR_RDMA`, `TF_DS_SOLO_OVERHEAD`, `TF_DS_NO_COPIES`, `TF_DS_TWO_HOP`, `TF_RDMA_GID`,
+`TF_SEED_RANDOM` and `TF_TOP_K_MAX` unset to serve as we do; the README says what
 each does when set.
 
 The served window, 20,971,520 positions (`TF_DS_WINDOW` in `ENGINE_ENV`, `--pool` in `FOLLOW_FLAGS`), leaves about
-12 GiB free on each node (12 to 14 GiB on ours at the lowest). On nodes that need more room, set 16,777,216 in both
+12 GiB free on each node (12 to 14 GiB on ours at the lowest; v0.3.6's measured rows: NEEDS GATE). On nodes that need more room, set 16,777,216 in both
 places and in `WINDOW`, which records it: 18 to 20 GiB stayed free on ours in v0.3.1's sessions, with every reply
 equal (README, v0.3.2).
 

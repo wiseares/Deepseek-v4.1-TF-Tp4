@@ -52,6 +52,13 @@ Since v0.3.2 the engine branch also carries [#38](https://github.com/bertholomus
 [@Blackwellboy](https://github.com/Blackwellboy): a refused Engram row id no longer leaks the AIO batch's buffers.
 The branch cherry-picked it onto the four-node line; the commit keeps Blackwellboy as its author. Thank you.
 
+Since v0.3.6 the engine branch carries three more outside contributions, each kept under its author's name:
+[#17](https://github.com/bertholomus/TensorFold/pull/17) by LeetJoe (a message's own text can no longer turn a
+pasted image placeholder into image tokens; the branch cherry-picked it and the commit keeps its author),
+upstream TensorFold's template fix by Nathan McBride ([@nmcbride](https://github.com/nmcbride)), and
+tonyd2wild's two patches, MIT (`TF_RDMA_GID`, the RDMA rings' source GID index, default 5 — the approach
+ecohash-co described on ashhart/TensorFold #559; and the opt-in `TF_SEED_RANDOM` / `TF_TOP_K_MAX`). Thank you.
+
 This recipe's `scripts/serve.sh` and `RUNNING.md` carry two durable fixes from an outside tester's bring-up,
 Niklas Lenz ([niklaslenz.com](https://niklaslenz.com)): his report's 5.2 (a head node with no ssh key for itself)
 and 5.3 (rank 0 opens the vision tower's shard at start, which a folder check missed). The script now runs a node

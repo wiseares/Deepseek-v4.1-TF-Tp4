@@ -45,6 +45,39 @@ What it does:
 - Exact DSpark speculative decoding: drafted output equals serial output token for token.
 - OpenAI-compatible HTTP API (TensorFold's server): chat and text completions, streaming, reasoning output, tool calls.
 
+## v0.3.6: what changed
+
+Measured by one night4 gate, `gate-v036-20261102T2005Z` (45 checks, all PASS: every reply, structured output, tool call, kept
+prompt and needle equal between the arms), passes A B A B on the same four nodes: A = the v0.3.5 settings on pin
+`ebf6ae332`, B = the v0.3.6 build with the settings below, both at the 20,971,520 pool. Every cell is computed
+from the slot's files (`results/served-v036/`) by `rows_v036.py`; none is typed.
+
+v0.3.6 is the served line's absorb fixes plus the four-node ring, the outside patches and the tokenizer/server work:
+the engine is v0.3.5's `ebf6ae33` plus 16 commits, exported on the branch's public line as `953bd6fd`; the work that
+stays private is not in it.
+
+| | v0.3.5 | v0.3.6 | Measured in |
+|---|---|---|---|
+| Engine | `0a0b69a`, on TensorFold 1.0.12 | `953bd6fd`, on TensorFold 1.0.12 | |
+| Kernel kit | 362 files | the same 362 files (the v0.3.6 pin's kit is byte-identical) | |
+| The streams' shared window (`TF_DS_WINDOW`; the followers' `--pool`) | 20,971,520 positions | the same | |
+| Settings changed | — | `TF_DS_ROUND_MS` = draft-cost table C; `TF_DS_IDX_SPLIT=8192` (was 1); new opt-ins `TF_DS_TWO_HOP`, `TF_RDMA_GID`, `TF_SEED_RANDOM`, `TF_TOP_K_MAX`, all off unless set | |
+| Set b decode, code / prose / structured | 135.8 / 78.5 / 186.1 | 135.4 / 78.3 / 185.1 | tok/s, rows 2 (kit_bench.py decode --set b), rows_v036 |
+| Concurrent decode, code and prose at C1 / C8 / C16 | code 113.7 / 230.1 / 274.1; prose 73.0 / 199.0 / 245.9 | code 114.4 / 233.6 / 274.9; prose 73.1 / 201.1 / 256.6 | tok/s, concurrent decode (cdecode_bench.py), mean of two passes, night4 gate |
+| Prefill, 8,192 / 32,768 / 131,072-token prompt | 3,034 / 3,256 / 3,275 | 3,083 / 3,289 / 3,315 | tok/s, median of 3, rows 6 (kit_bench.py prefill --fixed-words), rows_v036 |
+| Prefill, 93,335-token prompt | 2,926 | 2,972 | tok/s, cold, median of 3, mean of two passes, night4 gate |
+| TTFT behind a cold 93,335-token prefill | 0.58 s | 0.56 s | short chat sent 1 s into the prefill, median of 3, mean of two passes, night4 gate |
+| 300,000-token shared needle | 95.8 s, 3/3 found | 95.1 s, 3/3 found | cold, 3 needles, fresh haystack a run, median of 3, mean of two passes, night4 gate |
+| 1,000,000-token shared needle | not run | 356 s, 3/3 found | cold, 3 needles, one run, arm B only, night4 gate |
+
+New from outside contributors, each kept under its author's name:
+[pull request #17](https://github.com/bertholomus/TensorFold/pull/17) by LeetJoe (the image-placeholder escape),
+upstream TensorFold's template fix by Nathan McBride ([@nmcbride](https://github.com/nmcbride)), and tonyd2wild's
+two MIT patches (`TF_RDMA_GID`, default 5 unchanged — the approach ecohash-co described on ashhart/TensorFold
+#559; and `TF_SEED_RANDOM` / `TF_TOP_K_MAX`). Our own commits: `TF_DS_TWO_HOP` (a four-node ring read as two pairs,
+off unless set), the rank-stop watch, the DSML block reads, the salted compaction's cache_salt, the reply-ids
+marker text, and the tokenizer's encode scratch and memo.
+
 ## v0.3.5: what changed
 
 v0.3.4 (a `TF_DS_2D_YP` build) did not pass its gate and was not released; v0.3.5 follows v0.3.3.
@@ -536,7 +569,7 @@ Rank 0 runs `tensorfold-native serve` with `TF_TP_WORLD=4`; ranks 1-3 run `tf-ds
 settings as served: `--context 1048576 --parallel 16` and `--prompt-cache-gib 2` on rank 0, `TF_DS_WINDOW=20971520`
 (the streams' shared positions; the followers' `--pool 20971520`), `TF_DS_ROUND_ROWS=48`, `TF_DS_STREAMS=16`,
 `TF_DS_2D_GU=parity` (the balanced experts split), `TF_DS_SERVED_K=solo`, the measured round costs in
-`TF_DS_ROUND_MS`, `TF_DS_IDX_SPLIT=1`, `TF_FILL_CHUNKS=1`, `TF_FILL_MANY=1`, `TF_DS_2D_YX=1`,
+`TF_DS_ROUND_MS`, `TF_DS_IDX_SPLIT=8192`, `TF_FILL_CHUNKS=1`, `TF_FILL_MANY=1`, `TF_DS_2D_YX=1`,
 `TF_DS_WAVES=1`, `NCCL_MAX_NCHANNELS=4`, `TENSORFOLD_PLAIN_SPECIALS=1`, `TENSORFOLD_GRAMMAR_LIB` (the kit's
 `grammar/libtfgrammar.so`), `TENSORFOLD_SSE_KEEPALIVE=15`, `TENSORFOLD_STATS_EVERY=60`, CUDA graphs, the side
 stream, the paced L2 prefetch, Engram reads by AIO, and the decode-size exchanges over the RDMA rings. New since
@@ -546,11 +579,16 @@ whole one), cache_salt (engine-side, no flag), the prompt passes by position, an
 `TF_DS_2D_YX=1` with `NCCL_NCHANNELS_PER_NET_PEER=8` (the prompt's cross-rank gathers carry the pair-summed bf16 y
 instead of the four fp32 quarters, and the ring's send/recv pairs run on eight channels a peer). New since
 v0.3.3: `TF_DS_WAVES=1` with `NCCL_MAX_NCHANNELS=4` in place of `NCCL_NCHANNELS_PER_NET_PEER=8` (two waves a
-prompt pass, each one's gathers on a second stream and communicator; four channels a communicator).
-`TENSORFOLD_REPLY_IDS`, `TF_DS_NEIGHBOR_RDMA`, `TF_DS_SOLO_OVERHEAD` and `TF_DS_NO_COPIES` are unset.
-`TF_DS_PASS_ROWS` and `TF_DS_PASS_FROM` are unset (the pass rule at its default). The round costs are the table
-measured on the 2.9 bpw weights: they guide how many tokens a round drafts, and drafted output equals serial
-output, so no reply depends on them. `scripts/serve.sh` spells the launch out; `config.env.example` holds the site
+prompt pass, each one's gathers on a second stream and communicator; four channels a communicator). New since
+v0.3.6: the draft-cost table C in `TF_DS_ROUND_MS` and `TF_DS_IDX_SPLIT=8192`; `TF_DS_TWO_HOP` (a four-node ring
+read as two pairs, exchanging only between direct partners), `TF_RDMA_GID` (the RDMA rings' source GID index,
+default 5), `TF_SEED_RANDOM` and `TF_TOP_K_MAX` (a per-request sampling seed and a top-k cap) are new and off
+unless set.
+`TENSORFOLD_REPLY_IDS`, `TF_DS_NEIGHBOR_RDMA`, `TF_DS_SOLO_OVERHEAD`, `TF_DS_NO_COPIES`, `TF_DS_TWO_HOP`,
+`TF_RDMA_GID`, `TF_SEED_RANDOM` and `TF_TOP_K_MAX` are unset (the last four are v0.3.6's new opt-ins).
+`TF_DS_PASS_ROWS` and `TF_DS_PASS_FROM` are unset (the pass rule at its default). The round costs are table C
+(gated in `gate-v036-20261102T2005Z`, `results/served-v036/`): they guide how many tokens a
+round drafts, and drafted output equals serial output, so no reply depends on them. `scripts/serve.sh` spells the launch out; `config.env.example` holds the site
 settings.
 
 ## Requirements

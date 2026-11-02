@@ -4,6 +4,11 @@ Our own measurements of our own engine on four GB10 nodes, as the README's table
 addresses and paths are not in these files; nothing else was changed, except where a section says a file holds only
 a part of a check's output.
 
+## `served-v036/`: v0.3.6 — empty until the release rows land (NEEDS GATE)
+
+The night4 gate's files are copied here when the release rows pass; nothing measured is in the recipe until
+then.
+
 ## `served-v035/`: v0.3.5, the A/B and gate slots' files on the four nodes (2026-10-23)
 
 Two slots, each on a side port with the served lane stopped, then the promotion. A = v0.3.3's served build (engine

@@ -1,0 +1,31 @@
+{
+ "summary": {
+  "runs": 1,
+  "seconds": [
+   355.81
+  ],
+  "median_s": 355.81,
+  "max_s": 355.81,
+  "all_found": true,
+  "all_cold": true,
+  "win": false
+ },
+ "rows": [
+  {
+   "run": 1,
+   "seed": 301,
+   "haystack_tokens": 999660,
+   "prompt_tokens": 999708,
+   "cached_tokens": 0,
+   "cold": true,
+   "found": 3,
+   "phrases": [
+    "kestrel-orchid-9083",
+    "meadow-lantern-4867",
+    "orchid-nimbus-5175"
+   ],
+   "reply": "A: kestrel-orchid-9083\nB: meadow-lantern-4867\nC: orchid-nimbus-5175",
+   "seconds": 355.81
+  }
+ ]
+}
