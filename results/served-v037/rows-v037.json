@@ -1,0 +1,249 @@
+{
+ "slot": "gate-v037-20261104T0904Z",
+ "gate": "FAIL (47 checks, 1 failed)",
+ "gate_failed_check": "check speed: cdecode (10 rows): FAIL cdecode code C1 tok/s: A 112.8/113.8 (mean 113.3) B 112.9/113.5 (mean 113.2) B/A -0.1 % PASS",
+ "rowcmp": "LEVEL-OR-BETTER: 16 rows, none more than 1.0 % below",
+ "c8": {
+  "gate": "242.9 -> 240.3 (-1.1 %)",
+  "rerun": "235.6 -> 235.3 (-0.1 %), A B C A B C, replies 152/152 equal in every arm",
+  "release_row": "224.2 -> 224.2 (-0.0 %)",
+  "cleared": true
+ },
+ "memory": {
+  "a": "13/15/15/15",
+  "b": "12/14/15/15",
+  "floor": 9
+ },
+ "rows": {
+  "16 streams": {
+   "a": 258.3,
+   "b": 258.2,
+   "change_pct": -0.0,
+   "unit": "tok/s"
+  },
+  "8 streams": {
+   "a": 224.2,
+   "b": 224.2,
+   "change_pct": -0.0,
+   "unit": "tok/s"
+  },
+  "TTFT behind": {
+   "a": 0.54,
+   "b": 0.53,
+   "change_pct": -0.5,
+   "unit": "s"
+  },
+  "c2": {
+   "a": 100.5,
+   "b": 100.4,
+   "change_pct": -0.1,
+   "unit": "tok/s"
+  },
+  "c4": {
+   "a": 140.5,
+   "b": 141.3,
+   "change_pct": 0.5,
+   "unit": "tok/s"
+  },
+  "cdecode code C1": {
+   "a": 113.3,
+   "b": 113.2,
+   "change_pct": -0.1,
+   "unit": "tok/s"
+  },
+  "cdecode code C16": {
+   "a": 279.2,
+   "b": 283.2,
+   "change_pct": 1.4,
+   "unit": "tok/s"
+  },
+  "cdecode code C24": {
+   "a": 266.6,
+   "b": 304.8,
+   "change_pct": 14.3,
+   "unit": "tok/s"
+  },
+  "cdecode code C32": {
+   "a": 278.2,
+   "b": 302.4,
+   "change_pct": 8.7,
+   "unit": "tok/s"
+  },
+  "cdecode code C8": {
+   "a": 242.9,
+   "b": 240.3,
+   "change_pct": -1.1,
+   "unit": "tok/s"
+  },
+  "cdecode prose C1": {
+   "a": 73.7,
+   "b": 73.8,
+   "change_pct": 0.2,
+   "unit": "tok/s"
+  },
+  "cdecode prose C16": {
+   "a": 258.1,
+   "b": 257.2,
+   "change_pct": -0.4,
+   "unit": "tok/s"
+  },
+  "cdecode prose C24": {
+   "a": 239.9,
+   "b": 267.9,
+   "change_pct": 11.7,
+   "unit": "tok/s"
+  },
+  "cdecode prose C32": {
+   "a": 261.0,
+   "b": 287.3,
+   "change_pct": 10.1,
+   "unit": "tok/s"
+  },
+  "cdecode prose C8": {
+   "a": 202.6,
+   "b": 202.3,
+   "change_pct": -0.1,
+   "unit": "tok/s"
+  },
+  "needle 300K": {
+   "a": 94.7,
+   "b": 94.9,
+   "change_pct": 0.2,
+   "unit": "s"
+  },
+  "prefill 128K": {
+   "a": 3321.2,
+   "b": 3316.2,
+   "change_pct": -0.2,
+   "unit": "tok/s"
+  },
+  "prefill 32K": {
+   "a": 3296.2,
+   "b": 3297.1,
+   "change_pct": 0.0,
+   "unit": "tok/s"
+  },
+  "prefill 8K": {
+   "a": 3081.3,
+   "b": 3100.9,
+   "change_pct": 0.6,
+   "unit": "tok/s"
+  },
+  "prefill 93K": {
+   "a": 2987.2,
+   "b": 2981.0,
+   "change_pct": -0.2,
+   "unit": "tok/s"
+  },
+  "set a code": {
+   "a": 108.9,
+   "b": 108.1,
+   "change_pct": -0.7,
+   "unit": "tok/s"
+  },
+  "set a prose": {
+   "a": 71.8,
+   "b": 72.1,
+   "change_pct": 0.4,
+   "unit": "tok/s"
+  },
+  "set a structured": {
+   "a": 138.9,
+   "b": 139.5,
+   "change_pct": 0.4,
+   "unit": "tok/s"
+  },
+  "set b code": {
+   "a": 137.7,
+   "b": 137.7,
+   "change_pct": 0.0,
+   "unit": "tok/s"
+  },
+  "set b prose": {
+   "a": 79.1,
+   "b": 79.1,
+   "change_pct": 0.1,
+   "unit": "tok/s"
+  },
+  "set b structured": {
+   "a": 186.7,
+   "b": 185.9,
+   "change_pct": -0.4,
+   "unit": "tok/s"
+  },
+  "set c copy-code": {
+   "a": 153.2,
+   "b": 152.9,
+   "change_pct": -0.2,
+   "unit": "tok/s"
+  },
+  "set c copy-json": {
+   "a": 154.3,
+   "b": 154.4,
+   "change_pct": 0.1,
+   "unit": "tok/s"
+  },
+  "set c quote": {
+   "a": 164.4,
+   "b": 164.7,
+   "change_pct": 0.2,
+   "unit": "tok/s"
+  },
+  "sustained 16 streams": {
+   "a": 258.26,
+   "b": 258.16,
+   "change_pct": -0.03872066909315075,
+   "unit": "tok/s"
+  },
+  "sustained 16 ttft p50": {
+   "a": 0.286,
+   "b": 0.286,
+   "change_pct": 0.0,
+   "unit": "s"
+  },
+  "sustained 24 streams": {
+   "a": 256.03,
+   "b": 286.01,
+   "change_pct": 11.709565285318124,
+   "unit": "tok/s"
+  },
+  "sustained 24 ttft p50": {
+   "a": 8.014,
+   "b": 0.329,
+   "change_pct": -95.89468430247068,
+   "unit": "s"
+  },
+  "sustained 32 streams": {
+   "a": 255.66,
+   "b": 290.07,
+   "change_pct": 13.459281858718608,
+   "unit": "tok/s"
+  },
+  "sustained 32 ttft p50": {
+   "a": 15.875,
+   "b": 0.418,
+   "change_pct": -97.36692913385826,
+   "unit": "s"
+  },
+  "sustained 8 streams": {
+   "a": 224.2,
+   "b": 224.15,
+   "change_pct": -0.022301516503109298,
+   "unit": "tok/s"
+  },
+  "sustained 8 ttft p50": {
+   "a": 0.19,
+   "b": 0.188,
+   "change_pct": -1.0526315789473717,
+   "unit": "s"
+  }
+ },
+ "needle_1m_b": {
+  "seconds": [
+   355.95
+  ],
+  "found": "3 of 3"
+ },
+ "release": "READY",
+ "worse": []
+}

@@ -1,17 +1,19 @@
 # Running it
 
 What follows is how we run the served build. `scripts/serve.sh` is our served launch with the site values moved to
-`config.env`; nothing else in it changed but its `inputs` command, which the launch never runs. v0.3.6 changes the
-served settings (section 3); the kit is v0.3.0's, and the weights and how they are readied are v0.2.0's.
+`config.env`; nothing else in it changed but its `inputs` command, which the launch never runs. v0.3.7 changes the
+served settings (section 3); the kit gains the 16 `_rowmm_parts` cubins for rows 49-64 (and `aot.json`'s entries
+for them), and the weights and how they are readied are v0.2.0's.
 
 ## 1. The engine
 
 Clone our TensorFold fork at the commit in `ENGINE_COMMIT` (branch `deepseek-v41-zig-tp4`). That commit is the
-served engine's source (`7a2bc4c2`: v0.3.5's `ebf6ae33` plus the release's 16 commits — `TF_DS_TWO_HOP`,
-tonyd2wild's `TF_RDMA_GID` and `TF_SEED_RANDOM`/`TF_TOP_K_MAX` patches, the #17 escape, the tokenizer and server
-fixes and the rank-stop watch) carried on the branch's public line as `953bd6fd` (section 3). The public
+served engine's source (`4689fb4948c4`: v0.3.6's `7a2bc4c2` plus the release's five S5 commits — rounds
+of up to 64 rows (round.max_rows, draft.max_absorb 48 -> 64), the 64-row decode window, up to 32 streams
+a pool (draft.max_streams 16 -> 32), `_bias` in NP-row pieces and the block draft in passes) carried on
+the branch's public line as `ba03026c` (section 3). The public
 line adds two pull requests the served build did not carry: #30, the neighbor transport, which runs only with
-`TF_DS_NEIGHBOR_RDMA=1`, and #31, a CPU test of the replay cut. `7a2bc4c2`, built as below, gives the
+`TF_DS_NEIGHBOR_RDMA=1`, and #31, a CPU test of the replay cut. `4689fb4948c4`, built as below, gives the
 served binaries but for nvcc's build ids. `ENGINE_COMMIT`'s binaries also hold #30's code, and their ranks exchange a
 48-byte settings frame at the start (40 before), so run the same build on all four nodes. Build the native engine for
 the GB10's aarch64 + sm_121 with Zig 0.17.0 and the CUDA toolchain of `nvcr.io/nvidia/pytorch:26.07-py3`:
@@ -125,7 +127,8 @@ them.
 each does when set.
 
 The served window, 20,971,520 positions (`TF_DS_WINDOW` in `ENGINE_ENV`, `--pool` in `FOLLOW_FLAGS`), leaves about
-12 GiB free on each node (12 to 14 GiB on ours at the lowest; v0.3.6's measured rows: NEEDS GATE). On nodes that need more room, set 16,777,216 in both
+12 GiB free on each node (12 to 14 GiB on ours at the lowest; the v0.3.7 gate's lowest MemAvailable:
+12 GiB, A 13/15/15/15 B 12/14/15/15 GiB, floor 9). On nodes that need more room, set 16,777,216 in both
 places and in `WINDOW`, which records it: 18 to 20 GiB stayed free on ours in v0.3.1's sessions, with every reply
 equal (README, v0.3.2).
 

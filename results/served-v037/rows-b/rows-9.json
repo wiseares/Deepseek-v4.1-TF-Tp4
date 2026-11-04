@@ -1,0 +1,21 @@
+{
+ "cmd": "sustained",
+ "base": "http://127.0.0.1:18095",
+ "model": "DeepSeek-V4.1-Flash-1017",
+ "unix": 1793794007.0162213,
+ "result": [
+  {
+   "streams": 32,
+   "seconds": 90.0,
+   "max_tokens": 256,
+   "set": "b",
+   "requests": 115,
+   "aggregate_tps": 290.07,
+   "per_stream_tps_p50": 9.504,
+   "per_stream_tps_p95": 26.788,
+   "per_stream_tps_p05": 5.226,
+   "ttft_s_p50": 0.418,
+   "ttft_s_p95": 6.001
+  }
+ ]
+}

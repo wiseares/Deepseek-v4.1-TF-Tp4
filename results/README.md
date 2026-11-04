@@ -4,6 +4,11 @@ Our own measurements of our own engine on four GB10 nodes, as the README's table
 addresses and paths are not in these files; nothing else was changed, except where a section says a file holds only
 a part of a check's output.
 
+## `served-v037/`: v0.3.7 — empty until the release rows land (NEEDS GATE)
+
+The night4 v037 gate's files are copied here when the release rows pass; nothing measured is in the recipe until
+then.
+
 ## `served-v036/`: v0.3.6 — empty until the release rows land (NEEDS GATE)
 
 The night4 gate's files are copied here when the release rows pass; nothing measured is in the recipe until

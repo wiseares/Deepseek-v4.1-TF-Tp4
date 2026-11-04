@@ -1,0 +1,57 @@
+check launch 1-a: PASS start-1-a.log names the v0.3.6 build (engine 953bd6fd: v0.3.5's engine + 16 commits; the v0.3.6 pin's kit, no kernel change).
+check gates 1-a: PASS gates 6 ok=True
+check exact chat 1-a: PASS exact chat: 71 of 71 equal
+check parallel 1-a: PASS solo 16 replies, burst 16/16, staggered 16/16 == solo
+check solo done 1-a: PASS 16 of 16 done lines
+check shield 1-a: PASS no verdict (gate-shield-a.log); shield recorded 14 conversations: 14/14 answered
+check sampler 1-a: PASS di_sampler_check: PASS
+check structured 1-a: PASS structured: 11/11 other requests as specified, tool_choice "required" a call (finish tool_calls), burst 12 and staggered 12 of 12 == solo
+check reply ids 1-a: PASS di_replyids_check: recorded 16 rows -> replyids-a.json
+check dsml 1-a: PASS di_dsmlreq_check: recorded 16 rows -> dsml-a.json
+check acceptstats 1-a: PASS di_acceptstats_check: PASS (the depth families add up)
+check keptcheck 1-a: PASS 8 of 8 answered
+check fillcheck 1-a: PASS 2 of 2 answered
+check resume probe 1-a: PASS cached 0/4096/4096/6144 of 4396/6444/6204/8492 tokens
+check keepalive 1-a: PASS first tokens 29.71 and 59.37 s, 1 and 3 comments, 97510 and 97510 prompt tokens
+check stats lines 1-a: PASS 6 stats lines in rank 0's log
+check memory 1-a: PASS lowest MemAvailable 13/15/15/15 GiB (floor 9)
+check launch 2-b: PASS start-2-b.log names the v0.3.7 build (engine ba03026c: v0.3.6's engine + the five S5 commits; the kit gains the 16 _rowmm_parts RB 49..64 cubins) and 'TF_DS_STREAMS=32 TF_DS_ROUND_ROWS=64 TF_DS_ROUND_MS=14.5,17.4,19.9,22.3,24.0,25.9,27.5,29.2,30.8,32.5,34.1,35.7,37.4,39.0,40.7,42.3,43.9,45.6,47.2,48.9,50.5,52.1,53.8,55.4,57.1,58.7,60.3,62.0,63.6,65.3,66.9,68.5,70.2,71.8,73.5,75.1,76.7,78.4,80.0,81.7,83.3,84.9,86.6,88.2,89.9,91.5,93.1,94.8,96.4,98.1,99.7,101.4,103.0,104.6,106.3,107.9,109.6,111.2,112.9,114.5,116.1,117.8,119.4,121.1'
+check launch 2-b: ZIG_FOLLOW: PASS the follower command line names every word of '--streams 32 --round-rows 64'
+check gates 2-b: PASS gates 6 ok=True
+check exact chat 2-b: PASS exact chat: 71 of 71 equal
+check parallel 2-b: PASS solo 16 replies, burst 16/16, staggered 16/16 == solo, solo 16/16 == A's recording
+check solo done 2-b: PASS solo done lines 16/16 == A's (prompt, tokens, sha, finish)
+check shield 2-b: PASS PASS: 14/14 cases (5 clean equal, 9 injected shielded); 14/14 conversations' ids, text and greedy replies == A's
+check sampler 2-b: PASS di_sampler_check: PASS
+check structured 2-b: PASS structured: 11/11 other requests as specified, tool_choice "required" a call (finish tool_calls), burst 12 and staggered 12 of 12 == solo, 12/12 == A's recording
+check reply ids 2-b: PASS reply ids: 16/16 rows == A's (reasoning, content, calls, finish, tokens)
+check dsml 2-b: PASS DSML rows: 16/16 == A's
+check acceptstats 2-b: PASS di_acceptstats_check: PASS (the depth families add up)
+check keptcheck 2-b: PASS PASS: replies 8/8 == the served build's, geometry S 2822, image span 186, img1 6267, A 67827 (last chunk end 67584), candidate cached img2 4096, img3 2048, b1 2048, a2 67584 (served 4096, 2048, 2048, 67584)
+check fillcheck 2-b: PASS PASS: replies 2/2 == the served build's, Y 65010 tokens; X's longest stop in the wait 1.3 s as served (74 chunks of X), 1.3 s candidate (74), Y's first token 22.6 s as served (lane 22.5), 22.7 s candidate (lane 22.7, +0.7 %)
+check resume probe 2-b: PASS cached 0/4096/4096/6144 of 4396/6444/6204/8492 tokens; PASS: replies 4/4 == as served, cached as served 0/4096/4096/6144, candidate 0/4096/4096/6144, as served did not show the near-end case (q ran from 0, q2 resumed 4096): judged on equal replies alone
+check keepalive 2-b: PASS first tokens 29.8 and 59.52 s, 1 and 3 comments, 97510 and 97510 prompt tokens; PASS: replies 2/2 == as served, as served 1 and 3 comments, 15.0 and 15.0 s silent before the first token; candidate 1 and 3, 15.0 and 15.1 s, first tokens 29.7/59.4 s as served, 29.8/59.5 s candidate (97510 and 97510 prompt tokens)
+check stats lines 2-b: PASS 6 stats lines in rank 0's log
+check needle 1M 2-b: PASS 1M needle: 3 of 3 found, median 355.9 s, cold True
+check memory 2-b: PASS lowest MemAvailable 12/14/15/15 GiB (floor 9)
+check launch 3-a: PASS start-3-a.log names the v0.3.6 build (engine 953bd6fd: v0.3.5's engine + 16 commits; the v0.3.6 pin's kit, no kernel change).
+check memory 3-a: PASS lowest MemAvailable 14/15/16/16 GiB (floor 9)
+check launch 4-b: PASS start-4-b.log names the v0.3.7 build (engine ba03026c: v0.3.6's engine + the five S5 commits; the kit gains the 16 _rowmm_parts RB 49..64 cubins) and 'TF_DS_STREAMS=32 TF_DS_ROUND_ROWS=64 TF_DS_ROUND_MS=14.5,17.4,19.9,22.3,24.0,25.9,27.5,29.2,30.8,32.5,34.1,35.7,37.4,39.0,40.7,42.3,43.9,45.6,47.2,48.9,50.5,52.1,53.8,55.4,57.1,58.7,60.3,62.0,63.6,65.3,66.9,68.5,70.2,71.8,73.5,75.1,76.7,78.4,80.0,81.7,83.3,84.9,86.6,88.2,89.9,91.5,93.1,94.8,96.4,98.1,99.7,101.4,103.0,104.6,106.3,107.9,109.6,111.2,112.9,114.5,116.1,117.8,119.4,121.1'
+check launch 4-b: ZIG_FOLLOW: PASS the follower command line names every word of '--streams 32 --round-rows 64'
+check memory 4-b: PASS lowest MemAvailable 13/15/15/15 GiB (floor 9)
+check memory (both arms): PASS lowest MemAvailable A 13/15/15/15 GiB, B 12/14/15/15 GiB (floor 9)
+check speed: prefill: PASS prefill 93K tok/s: A 2984.9/2989.6 (mean 2987.2) B 2981.3/2980.7 (mean 2981.0) B/A -0.2 % PASS
+check speed: behind: PASS short chat TTFT behind a cold 93K: A 0.55/0.52 (mean 0.54 s) B 0.53/0.54 (mean 0.53 s) B/A -0.5 % PASS; replies 4/4 == A's
+check speed: needle300k: PASS needle300k median s: A 94.7/94.7 (mean 94.7) B 95.0/94.8 (mean 94.9) B/A +0.2 % PASS (3/3 found and cold on all four)
+check speed: cdecode (10 rows): FAIL cdecode code C1 tok/s: A 112.8/113.8 (mean 113.3) B 112.9/113.5 (mean 113.2) B/A -0.1 % PASS
+cdecode code C16 tok/s: A 278.7/279.8 (mean 279.2) B 283.9/282.6 (mean 283.2) B/A +1.4 % PASS
+cdecode code C24 tok/s: A 266.4/266.8 (mean 266.6) B 305.1/304.6 (mean 304.8) B/A +14.3 % PASS
+cdecode code C32 tok/s: A 279.2/277.2 (mean 278.2) B 302.9/301.8 (mean 302.4) B/A +8.7 % PASS
+cdecode code C8 tok/s: A 242.2/243.6 (mean 242.9) B 239.5/241.1 (mean 240.3) B/A -1.1 % FAIL (B > 1 % slower)
+cdecode prose C1 tok/s: A 73.8/73.6 (mean 73.7) B 74.1/73.6 (mean 73.8) B/A +0.2 % PASS
+cdecode prose C16 tok/s: A 258.2/258.0 (mean 258.1) B 256.3/258.0 (mean 257.2) B/A -0.4 % PASS
+cdecode prose C24 tok/s: A 239.3/240.5 (mean 239.9) B 268.1/267.7 (mean 267.9) B/A +11.7 % PASS
+cdecode prose C32 tok/s: A 260.9/261.1 (mean 261.0) B 287.1/287.5 (mean 287.3) B/A +10.1 % PASS
+cdecode prose C8 tok/s: A 201.9/203.2 (mean 202.6) B 202.1/202.5 (mean 202.3) B/A -0.1 % PASS
+check replies (seeded bench): PASS A 974 shas, B 974 shas, equal as a multiset
+RESULT: FAIL (night4_gate v037: 47 checks, 1 failed; B vs A on 18095, passes A B A B; gate-v037-20261104T0904Z)

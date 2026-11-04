@@ -1,7 +1,8 @@
 # Kernel kit: DeepSeek-V4.1-Flash on TensorFold 1.0 (Zig), four GB10 nodes
 
-This folder is the kit our served four-node lane loads (engine `7a2bc4c2`, the 1017 weights; v0.3.5's
-engine `ebf6ae33` loaded the same files). `MANIFEST` lists all 362 files with their sizes and sha256. 361 are
+This folder is the kit our served four-node lane loads (engine `4689fb4948c4`, the 1017 weights; v0.3.6's
+engine `7a2bc4c2` loaded the same files except the 16 `_rowmm_parts` RB 49..64 cubins and `aot.json`'s entries
+for them, which v0.3.7 adds). `MANIFEST` lists all 362 files with their sizes and sha256. 361 are
 byte for byte the served copies on our four nodes; `aot/aot.json` differs only in its packer's note of where two
 kernel sets came from, which named private folders (the engine does not read the note, and the kernels it lists
 are the same). Git holds 357 of the files (141 MB). The other five are made from public weights instead of

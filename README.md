@@ -45,6 +45,54 @@ What it does:
 - Exact DSpark speculative decoding: drafted output equals serial output token for token.
 - OpenAI-compatible HTTP API (TensorFold's server): chat and text completions, streaming, reasoning output, tool calls.
 
+## v0.3.7: what changed
+
+Measured by one night4 gate, `gate-v037-20261104T0904Z` (47 checks: every reply, structured output, tool call, kept prompt and
+needle equal between the arms — 974/974 seeded shas — except code C8 -1.1 %, which the A B C A B C rerun did
+not reproduce, -0.1 %, replies equal; see below), passes A B A B on the same four nodes: A = the v0.3.6
+settings on pin `7a2bc4c2`, B = the v0.3.7 build with the settings below, both at the 20,971,520 pool. Every
+cell is computed from the slot's files (`results/served-v037/`) by `rows_v037.py`; none is typed.
+
+v0.3.7 is the served line's S5 streams work: the engine is v0.3.6's `7a2bc4c2` plus 5 commits, exported on the
+branch's public line as `ba03026c`; the work that stays private is not in it.
+
+| | v0.3.6 | v0.3.7 | change | Measured in |
+|---|---|---|---|---|
+| Engine | `953bd6fd`, on TensorFold 1.0.12 | `ba03026c`, on TensorFold 1.0.12 | — | |
+| Kernel kit | 362 files | 378 files (the 16 `_rowmm_parts` RB 49..64 cubins and `aot.json`'s entries for them; kit_superset.py: it only adds) | — | |
+| The streams' shared window (`TF_DS_WINDOW`; the followers' `--pool`) | 20,971,520 positions | the same | — | |
+| Settings changed | — | `TF_DS_ROUND_ROWS` 48 -> 64 (64-row rounds, a 64-row decode window), `TF_DS_STREAMS` 16 -> 32, `TF_DS_ROUND_MS` = the 64-entry table, `--parallel` 16 -> 32, followers `--streams 32 --round-rows 64`; no new opt-in | — | |
+| Set b decode, code / prose / structured | 137.7 / 79.1 / 186.7 | 137.7 / 79.1 / 185.9 | code +0.0 %, prose +0.1 %, structured -0.4 % | tok/s, rows 2 (kit_bench.py decode --set b), rowcmp-v037.log |
+| Concurrent decode, code and prose at C1 / C8 / C16 / C24 / C32 | code 113.3 / 242.9 / 279.2 / 266.6 / 278.2; prose 73.7 / 202.6 / 258.1 / 239.9 / 261.0 | code 113.2 / 240.3 / 283.2 / 304.8 / 302.4; prose 73.8 / 202.3 / 257.2 / 267.9 / 287.3 | code C1 -0.1 %, C8 -1.1 %, C16 +1.4 %, C24 +14.3 %, C32 +8.7 %; C8 -1.1 % in the gate did not reproduce (the rerun 235.6 -> 235.3, -0.1 %, replies equal; release row 8 streams 224.2 -> 224.2); prose C1 +0.2 %, C8 -0.1 %, C16 -0.4 %, C24 +11.7 %, C32 +10.1 % | tok/s, concurrent decode (cdecode_bench.py), mean of two passes, night4 gate |
+| Sustained set b, 8 streams (90 s) | 224.2 | 224.2 | -0.0 % | aggregate tok/s, rows 4 (rows-4.json), rowcmp-v037.log |
+| Sustained set b, 16 streams (90 s) | 258.3 | 258.2 | -0.0 % | rows 5 (rows-5.json), rowcmp-v037.log |
+| Sustained set b, 24 streams (90 s) | 256.0 | 286.0 | +11.7 % | aggregate tok/s, rows 8 (rows-8.json), rows_v037 |
+| 24-stream TTFT p50 | 8.01 s | 0.33 s | -7.68 s (-95.9 %) | rows 8, ttft_s_p50 |
+| Sustained set b, 32 streams (90 s) | 255.7 | 290.1 | +13.5 % | rows 9 (rows-9.json), rows_v037 |
+| 32-stream TTFT p50 | 15.88 s | 0.42 s | -15.46 s (-97.4 %) | rows 9, ttft_s_p50 |
+| Prefill, 8,192 / 32,768 / 131,072-token prompt | 3,081 / 3,296 / 3,321 | 3,101 / 3,297 / 3,316 | +0.6 / +0.0 / -0.2 % | tok/s, median of 3, rows 6 (kit_bench.py prefill --fixed-words), rowcmp-v037.log |
+| Prefill, 93,335-token prompt | 2,987 | 2,981 | -0.2 % | tok/s, cold, mean of two passes, night4 gate |
+| TTFT behind a cold 93,335-token prefill | 0.54 s | 0.53 s | -0.5 % | short chat sent 1 s into the prefill, mean of two passes, night4 gate |
+| 300,000-token shared needle | 94.7 s, 3/3 found | 94.9 s, 3/3 found | +0.2 % | cold, 3 needles, fresh haystack a run, median of 3, mean of two passes, night4 gate |
+| 1,000,000-token shared needle | 356 s, 3/3 found | 355.9 s, 3/3 found | -0.0 % | cold, 3 needles, median, arm B (the gate runs it on the candidate), gate-b-n1m.json |
+
+The gate's one failed check was code C8, -1.1 % (242.9 -> 240.3): the same-day A B C A B C
+rerun did not reproduce it — code C8 235.6 -> 235.3 (-0.1 %), all 152 replies equal in every
+arm — and the release row is level (8 streams 224.2 -> 224.2). The headline:
+concurrent decode at the new C24/C32 (+14.3 % / +8.7 % code,
++11.7 % / +10.1 % prose), sustained 24/32 streams
+256.0 -> 286.0 (+11.7 %) and
+255.7 -> 290.1 (+13.5 %)
+with TTFT p50 8.01 s -> 0.33 s and
+15.88 s -> 0.42 s; prefill 93K
+-0.2 %, TTFT behind -0.5 %, needle 300K +0.2 %;
+replies 974/974 equal as a multiset.
+
+No outside contributor: the five commits are all ours (the export re-authors each of them bertholomus). Our own
+commits: rounds of up to 64 rows (round.max_rows, draft.max_absorb 48 -> 64), a decode window of 64 rows, up to 32
+streams a pool (draft.max_streams 16 -> 32), a Markov step of more than NP streams running `_bias` in NP-row
+pieces, and the block draft in passes of at most 128 / block streams.
+
 ## v0.3.6: what changed
 
 Measured by one night4 gate, `gate-v036-20261102T2005Z` (45 checks, all PASS: every reply, structured output, tool call, kept
@@ -583,12 +631,15 @@ prompt pass, each one's gathers on a second stream and communicator; four channe
 v0.3.6: the draft-cost table C in `TF_DS_ROUND_MS` and `TF_DS_IDX_SPLIT=8192`; `TF_DS_TWO_HOP` (a four-node ring
 read as two pairs, exchanging only between direct partners), `TF_RDMA_GID` (the RDMA rings' source GID index,
 default 5), `TF_SEED_RANDOM` and `TF_TOP_K_MAX` (a per-request sampling seed and a top-k cap) are new and off
-unless set.
+unless set. New since v0.3.7: rounds of up to 64 rows (`TF_DS_ROUND_ROWS=64`, with a 64-row decode window), up
+to 32 streams a pool (`TF_DS_STREAMS=32`), the draft-cost table's 64 entries (`TF_DS_ROUND_MS`, table C + 16
+entries at slope 1.642), `--parallel 32` and followers `--streams 32 --round-rows 64`.
 `TENSORFOLD_REPLY_IDS`, `TF_DS_NEIGHBOR_RDMA`, `TF_DS_SOLO_OVERHEAD`, `TF_DS_NO_COPIES`, `TF_DS_TWO_HOP`,
 `TF_RDMA_GID`, `TF_SEED_RANDOM` and `TF_TOP_K_MAX` are unset (the last four are v0.3.6's new opt-ins).
-`TF_DS_PASS_ROWS` and `TF_DS_PASS_FROM` are unset (the pass rule at its default). The round costs are table C
-(gated in `gate-v036-20261102T2005Z`, `results/served-v036/`): they guide how many tokens a
-round drafts, and drafted output equals serial output, so no reply depends on them. `scripts/serve.sh` spells the launch out; `config.env.example` holds the site
+`TF_DS_PASS_ROWS` and `TF_DS_PASS_FROM` are unset (the pass rule at its default). The round costs are the 64-entry table
+(gated in `gate-v037-20261104T0904Z`, `results/served-v037/`; the first 48 entries are v0.3.6's table C unchanged, and
+the gate measured the whole 64-entry table on this release's build): they guide how many
+tokens a round drafts, and drafted output equals serial output, so no reply depends on them. `scripts/serve.sh` spells the launch out; `config.env.example` holds the site
 settings.
 
 ## Requirements
